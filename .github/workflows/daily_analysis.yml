@@ -1,11 +1,12 @@
 name: 每日股票分析
 
 on:
-  # 定时触发 - 每天北京时间 18:00 (UTC 10:00)
+  # 定时触发
   schedule:
-    - cron: '0 10 * * 1-5'     # 周一到周五，UTC 10:00 = 北京时间 18:00
+    # UTC 00:00 = 北京 08:00 / UTC 12:00 = 北京 20:00
+    - cron: '0 0,12 * * *'  
   
-  # 手动触发
+  # 手动触发保留
   workflow_dispatch:
     inputs:
       mode:
@@ -14,13 +15,13 @@ on:
         default: 'full'
         type: choice
         options:
-          - full          # 完整分析（股票+大盘）
-          - market-only   # 仅大盘复盘
-          - stocks-only   # 仅股票分析
+          - full
+          - market-only
+          - stocks-only
       force_run:
-        description: '强制运行（跳过交易日检查）'
+        description: '强制运行'
         required: false
-        default: false
+        default: true # 建议手动触发时默认为 true，方便调试
         type: boolean
 
 # 并发控制：同一时间只运行一个分析任务
